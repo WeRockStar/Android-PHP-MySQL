@@ -21,7 +21,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     EditText username, password;
-    Button btnLogIn, btnGoTo;
+    Button btnSignUp;
 
 
     @Override
@@ -31,34 +31,12 @@ public class MainActivity extends AppCompatActivity {
 
         username = (EditText) findViewById(R.id.edtUserName);
         password = (EditText) findViewById(R.id.edtPassword);
-        btnLogIn = (Button) findViewById(R.id.btnLogIn);
-        btnGoTo = (Button) findViewById(R.id.btnGoTo);
+        btnSignUp = (Button) findViewById(R.id.btnSignUp);
 
-        btnGoTo.setOnClickListener(new View.OnClickListener() {
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-                startActivity(intent);
-                //kill activity
-                finish();
-            }
-        });
 
-        btnLogIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-                dialog.setMessage("Go to page 2 ?");
-                dialog.setTitle("Warning");
-                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                dialog.setCancelable(false);
-                dialog.show();
             }
         });
     }
