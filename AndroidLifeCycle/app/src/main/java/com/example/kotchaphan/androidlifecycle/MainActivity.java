@@ -28,7 +28,8 @@ import com.squareup.okhttp.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    public EditText username, password;
+    EditText username;
+    EditText password;
     Button btnSignUp;
     ProgressDialog progressDialog;
 
@@ -51,7 +52,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    class InsertMysql extends AsyncTask<String, Void, Void> {
+    public class InsertMysql extends AsyncTask<String, Void, Void> {
+        String user = username.getText().toString();
+        String pass = password.getText().toString();
 
         @Override
         protected void onPreExecute() {
@@ -67,19 +70,15 @@ public class MainActivity extends AppCompatActivity {
             OkHttpClient client = new OkHttpClient();
 
             RequestBody body = new FormEncodingBuilder()
-                    .add("username", "Kotchaphan")
-                    .add("password", "1234")
+                    .add("username", user)
+                    .add("password", pass)
                     .build();
-
             try {
                 Request request = new Request.Builder().url(params[0]).post(body).build();
 
                 Response response = client.newCall(request).execute();
             } catch (Exception e) {
-
             }
-
-
             return null;
         }
 
@@ -91,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            progressDialog.cancel();
         }
     }
 }
