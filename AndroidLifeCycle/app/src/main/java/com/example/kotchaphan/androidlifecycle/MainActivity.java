@@ -26,12 +26,15 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
 
     EditText username;
     EditText password;
     Button btnSignUp;
     ProgressDialog progressDialog;
+    CoordinatorLayout rootLayout;
 
 
     @Override
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         username = (EditText) findViewById(R.id.edtUserName);
         password = (EditText) findViewById(R.id.edtPassword);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
+        rootLayout = (CoordinatorLayout)findViewById(R.id.rootLayout);
 
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     public class InsertMysql extends AsyncTask<String, Void, Void> {
         String user = username.getText().toString();
         String pass = password.getText().toString();
+        String success = "0";
 
         @Override
         protected void onPreExecute() {
@@ -77,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
                 Request request = new Request.Builder().url(params[0]).post(body).build();
 
                 Response response = client.newCall(request).execute();
+                String result = response.body().string();
+                JSONObject object = new JSONObject(result);
+
+                success = object.getString("success");
             } catch (Exception e) {
             }
             return null;
@@ -91,6 +100,12 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             progressDialog.cancel();
+            username.setText("");
+            password.setText("");
+
+            if(success.equals("1")) {
+                Snackbar.make(rootLayout , "Success" , Snackbar.LENGTH_SHORT).show();
+            }
         }
     }
 }
