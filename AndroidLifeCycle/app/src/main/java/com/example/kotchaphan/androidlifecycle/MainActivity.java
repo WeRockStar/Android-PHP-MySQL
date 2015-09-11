@@ -1,7 +1,9 @@
 package com.example.kotchaphan.androidlifecycle;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -18,10 +20,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
 public class MainActivity extends AppCompatActivity {
 
-    EditText username, password;
+    public EditText username, password;
     Button btnSignUp;
+    ProgressDialog progressDialog;
 
 
     @Override
@@ -33,12 +42,55 @@ public class MainActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.edtPassword);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
 
+
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                new InsertMysql().execute("http://192.168.13.1/trainning/");
             }
         });
     }
 
+    class InsertMysql extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //pre processs
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setMessage("Loading...");
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            OkHttpClient client = new OkHttpClient();
+
+            RequestBody body = new FormEncodingBuilder()
+                    .add("username", "Kotchaphan")
+                    .add("password", "1234")
+                    .build();
+
+            try {
+                Request request = new Request.Builder().url(params[0]).post(body).build();
+
+                Response response = client.newCall(request).execute();
+            } catch (Exception e) {
+
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+    }
 }
